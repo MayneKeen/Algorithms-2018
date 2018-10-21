@@ -2,6 +2,12 @@ package lesson1;
 
 import kotlin.NotImplementedError;
 
+import java.io.*;
+import java.lang.*;
+import java.lang.reflect.Array;
+import java.util.*;
+import java.util.regex.Matcher;
+
 @SuppressWarnings("unused")
 public class JavaTasks {
     /**
@@ -32,8 +38,13 @@ public class JavaTasks {
      *
      * В случае обнаружения неверного формата файла бросить любое исключение.
      */
+
+
+
     static public void sortTimes(String inputName, String outputName) {
-        throw new NotImplementedError();
+        //throw new NotImplementedError();
+
+
     }
 
     /**
@@ -62,6 +73,9 @@ public class JavaTasks {
      *
      * В случае обнаружения неверного формата файла бросить любое исключение.
      */
+
+    //public static int[] sAHelper(String[] input ) { }
+
     static public void sortAddresses(String inputName, String outputName) {
         throw new NotImplementedError();
     }
@@ -96,8 +110,21 @@ public class JavaTasks {
      * 99.5
      * 121.3
      */
-    static public void sortTemperatures(String inputName, String outputName) {
-        throw new NotImplementedError();
+    static public void sortTemperatures(String inputName, String outputName) throws IOException {
+        Scanner scanner = new Scanner(new FileReader(inputName));
+        FileWriter fileWriter = new FileWriter(outputName);
+        ArrayList<Double> numbers = new ArrayList<>();
+
+        while (scanner.hasNextLine()) {
+            numbers.add(Double.parseDouble(scanner.nextLine()));
+        }
+        scanner.close();
+
+        Iterator iterator = numbers.iterator();
+        while (iterator.hasNext()) {
+            fileWriter.write(iterator.next() + "\n");
+        }
+        fileWriter.close();
     }
 
     /**
@@ -129,8 +156,52 @@ public class JavaTasks {
      * 2
      * 2
      */
-    static public void sortSequence(String inputName, String outputName) {
-        throw new NotImplementedError();
+    static public void sortSequence(String inputName, String outputName) throws IOException {
+        File inputFile = new File(inputName);
+        Scanner scanner = new Scanner(inputFile);
+        FileWriter fileWriter = new FileWriter(new File(outputName));
+
+        Map<Integer, Integer> map = new HashMap<>();
+
+        while (scanner.hasNextLine()) {
+            Integer currentNum = Integer.parseInt(scanner.nextLine());
+
+            if(map.containsKey(currentNum)) {
+                Integer a = map.get(currentNum) + 1;
+                map.put(currentNum, a);
+            }
+            else {
+                map.put(currentNum, 1);
+            }
+        }
+        scanner.close();
+
+        Integer maxKey = 0;
+        Integer maxVal = 0;
+
+
+        for(Integer element: map.keySet()) {
+            Integer a = map.get(element);
+
+            if(a > maxVal){
+                maxVal = a;
+                maxKey = element;
+            }
+        }
+
+        Scanner scanner2 = new Scanner(inputFile);
+        while (scanner2.hasNextLine()) {
+            Integer a = Integer.parseInt(scanner2.nextLine());
+            if(!a.equals(maxKey)) {
+                fileWriter.write(a + "\n");
+            }
+        }
+        scanner2.close();
+
+        for(int i = 0; i<=maxVal; i++) {
+            fileWriter.write(maxKey +"\n");
+        }
+        fileWriter.close();
     }
 
     /**
@@ -148,6 +219,7 @@ public class JavaTasks {
      * Результат: second = [1 3 4 9 9 13 15 20 23 28]
      */
     static <T extends Comparable<T>> void mergeArrays(T[] first, T[] second) {
-        throw new NotImplementedError();
+
+
     }
 }
