@@ -202,6 +202,7 @@ public class JavaTasks {
             fileWriter.write(maxKey +"\n");
         }
         fileWriter.close();
+        
     }
 
     /**
