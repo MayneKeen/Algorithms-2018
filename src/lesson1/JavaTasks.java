@@ -198,11 +198,11 @@ public class JavaTasks {
         }
         scanner2.close();
 
-        for(int i = 0; i<=maxVal; i++) {
+        for(int i = 0; i<maxVal; i++) {
             fileWriter.write(maxKey +"\n");
         }
         fileWriter.close();
-        
+
     }
 
     /**
@@ -220,7 +220,7 @@ public class JavaTasks {
      * Результат: second = [1 3 4 9 9 13 15 20 23 28]
      */
     static <T extends Comparable<T>> void mergeArrays(T[] first, T[] second) {
-
-
+        System.arraycopy(first, 0, second, 0, first.length);
+        Arrays.sort(second);
     }
 }
