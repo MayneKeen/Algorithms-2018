@@ -119,11 +119,12 @@ public class JavaTasks {
             numbers.add(Double.parseDouble(scanner.nextLine()));
         }
         scanner.close();
+        numbers.sort(Double::compareTo);
 
-        Iterator iterator = numbers.iterator();
-        while (iterator.hasNext()) {
-            fileWriter.write(iterator.next() + "\n");
+        for(int i = 0; i<numbers.size(); i++) {
+            fileWriter.write(numbers.get(i) + "\n");
         }
+
         fileWriter.close();
     }
 
@@ -157,9 +158,8 @@ public class JavaTasks {
      * 2
      */
     static public void sortSequence(String inputName, String outputName) throws IOException {
-        File inputFile = new File(inputName);
-        Scanner scanner = new Scanner(inputFile);
-        FileWriter fileWriter = new FileWriter(new File(outputName));
+        Scanner scanner = new Scanner(new FileReader(inputName));
+        FileWriter fileWriter = new FileWriter(outputName);
 
         Map<Integer, Integer> map = new HashMap<>();
 
@@ -189,7 +189,7 @@ public class JavaTasks {
             }
         }
 
-        Scanner scanner2 = new Scanner(inputFile);
+        Scanner scanner2 = new Scanner(new FileReader(inputName));
         while (scanner2.hasNextLine()) {
             Integer a = Integer.parseInt(scanner2.nextLine());
             if(!a.equals(maxKey)) {
