@@ -39,12 +39,26 @@ public class JavaTasks {
      * В случае обнаружения неверного формата файла бросить любое исключение.
      */
 
+    //Трудоемкость T = O(n*log(n))
+    //Ресурсоемкость R = O(n)
 
+    static public void sortTimes(String inputName, String outputName) throws IOException{
+        Scanner scanner = new Scanner(new FileReader(inputName));
+        FileWriter fileWriter = new FileWriter(outputName);
 
-    static public void sortTimes(String inputName, String outputName) {
-        //throw new NotImplementedError();
+        List<String> times=new ArrayList<>();
 
+        while (scanner.hasNextLine())
+            times.add(scanner.nextLine());
+        scanner.close();
 
+        Collections.sort(times, Comparator.naturalOrder());
+
+        for(int i = 0; i<times.size(); i++) {
+            fileWriter.write(times.get(i));
+            fileWriter.write("\n");
+        }
+        fileWriter.close();
     }
 
     /**
@@ -110,16 +124,19 @@ public class JavaTasks {
      * 99.5
      * 121.3
      */
+    //Трудоемкость T = O(n*log(n))
+    //Ресурсоемкость R = O(n)
+
     static public void sortTemperatures(String inputName, String outputName) throws IOException {
         Scanner scanner = new Scanner(new FileReader(inputName));
         FileWriter fileWriter = new FileWriter(outputName);
-        ArrayList<Double> numbers = new ArrayList<>();
+        List<Double> numbers = new ArrayList<>();
 
         while (scanner.hasNextLine()) {
             numbers.add(Double.parseDouble(scanner.nextLine()));
         }
         scanner.close();
-        numbers.sort(Double::compareTo);
+        Collections.sort(numbers);
 
         for(int i = 0; i<numbers.size(); i++) {
             fileWriter.write(numbers.get(i) + "\n");
@@ -157,6 +174,9 @@ public class JavaTasks {
      * 2
      * 2
      */
+    //Трудоемкость T = O(n)
+    //Ресурсоемкость R = O(n)
+
     static public void sortSequence(String inputName, String outputName) throws IOException {
         Scanner scanner = new Scanner(new FileReader(inputName));
         FileWriter fileWriter = new FileWriter(outputName);
@@ -219,6 +239,9 @@ public class JavaTasks {
      *
      * Результат: second = [1 3 4 9 9 13 15 20 23 28]
      */
+    //Трудоемкость T = O(n*log(n))
+    //Ресурсоемкость R = O(n) , где n = first.length + second.length
+
     static <T extends Comparable<T>> void mergeArrays(T[] first, T[] second) {
         System.arraycopy(first, 0, second, 0, first.length);
         Arrays.sort(second);
