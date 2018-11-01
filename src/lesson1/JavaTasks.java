@@ -1,5 +1,6 @@
 package lesson1;
 
+import jdk.nashorn.internal.runtime.regexp.joni.Regex;
 import kotlin.NotImplementedError;
 
 import java.io.*;
@@ -7,6 +8,7 @@ import java.lang.*;
 import java.lang.reflect.Array;
 import java.util.*;
 import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @SuppressWarnings("unused")
 public class JavaTasks {
@@ -87,11 +89,55 @@ public class JavaTasks {
      *
      * В случае обнаружения неверного формата файла бросить любое исключение.
      */
+    //Трудоемкость T = O(n^2*log(n))
+    //Ресурсоемкость R = O(n^2)
 
-    //public static int[] sAHelper(String[] input ) { }
 
-    static public void sortAddresses(String inputName, String outputName) {
-        throw new NotImplementedError();
+
+    public static void adder(Map<String, List<String>> map, String key, String value) {
+        if (map.get(key) != null) {
+            map.get(key).add(value);
+        }
+        else {
+            List<String> temp = new ArrayList<>();
+            temp.add(value);
+            map.put(key, temp);
+        }
+    }
+
+    static public void sortAddresses(String inputName, String outputName) throws IOException{
+
+        Scanner scanner = new Scanner((new FileReader(inputName)));
+        List<String> adresses = new ArrayList<>();
+
+        while (scanner.hasNextLine())                                              //Иванов Михаил - Железнодорожная 7
+            adresses.add(scanner.nextLine());                                      //Железнодорожная 7 - Иванов Алексей, Иванов Михаил
+        scanner.close();
+
+        List<String[]> splitted = new ArrayList<>();
+        Map<String, List<String>> map = new TreeMap<>();
+
+
+        for(int i=0; i<adresses.size(); i++) {
+            String[] temp = adresses.get(i).split(" - ");
+
+            adder(map, temp[1], temp[0]);
+        }
+
+        FileWriter fileWriter = new FileWriter(outputName);
+
+        for(String element: map.keySet()) {
+            List<String> tmp = map.get(element);
+            Collections.sort(tmp);
+            String out = tmp.toString();
+            String result = out.substring(1, out.length()-1);
+
+            fileWriter.write(element);
+            fileWriter.write(" - ");
+            fileWriter.write(result);
+            fileWriter.write("\n");
+        }
+        fileWriter.close();
     }
 
     /**
