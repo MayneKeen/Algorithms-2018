@@ -66,10 +66,75 @@ public class BinaryTree<T extends Comparable<T>> extends AbstractSet<T> implemen
      */
     @Override
     public boolean remove(Object o) {
-        // TODO
+
+        //TODO
         throw new NotImplementedError();
+       /* if(contains(o)) {
+            delete((T) o, root);
+            size--;
+        }
+        return true;
+        */
     }
 
+  /*  public Node<T> delete(T value, Node<T> root ) {
+        Node<T> current, parent;
+        current = find(root, value);
+
+        if (current == null) {
+            return null;
+        }
+
+        if (current.right == null) {
+
+            if (parent == null) {
+                root = current.left;
+            } else {
+                int result = parent.value.compareTo(current.value);
+                if (result > 0) {
+
+                    parent.left = current.left;
+                } else if (result < 0) {
+                    parent.right = current.left;
+                }
+            }
+        } else if (current.right.left == null) {
+            current.right.left = current.left;
+            if (parent == null) {
+                root = current.right;
+            } else {
+                int result = parent.value.compareTo(current.value);
+                if (result > 0) {
+                    parent.left = current.right;
+                } else if (result < 0) {
+                    parent.right = current.right;
+                }
+            }
+        } else {
+            Node<T> leftmost = current.right.left;
+            Node<T> leftmostParent = current.right;
+            while (leftmost.left != null) {
+                leftmostParent = leftmost;
+                leftmost = leftmost.left;
+            }
+            leftmostParent.left = leftmost.right;
+            leftmost.left = current.left;
+            leftmost.right = current.right;
+            if (parent == null) {
+                root = leftmost;
+            } else {
+                int result = parent.value.compareTo(current.value);
+                if (result > 0) {
+                    parent.left = leftmost;
+                } else if (result < 0) {
+                    parent.right = leftmost;
+                }
+            }
+        }
+
+        return root;
+    }
+*/
     @Override
     public boolean contains(Object o) {
         @SuppressWarnings("unchecked")
@@ -109,8 +174,16 @@ public class BinaryTree<T extends Comparable<T>> extends AbstractSet<T> implemen
          * Средняя
          */
         private Node<T> findNext() {
-            // TODO
+            //TODO
             throw new NotImplementedError();
+            /*if(root == null)
+                return null;
+            Node<T> node;
+
+            if(!current==null) {
+                node = current;
+            }
+*/
         }
 
         @Override

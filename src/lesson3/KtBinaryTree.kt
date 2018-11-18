@@ -54,8 +54,90 @@ class KtBinaryTree<T : Comparable<T>> : AbstractMutableSet<T>(), CheckableSorted
      * Удаление элемента в дереве
      * Средняя
      */
+
+
+    private fun findParent(value: T): Node<T>? {
+        var current = root
+        var parent = root
+
+        while (current != null) {
+            val comparison = current.value.compareTo(value)
+
+            if (comparison > 0) {
+
+                parent = current
+                current = current.left
+            } else if (comparison < 0) {
+
+                parent = current
+                current = current.right
+            } else
+                break
+        }
+        return if (parent == root) null else parent
+    }
+
+
     override fun remove(element: T): Boolean {
-        TODO()
+        val closest = find(element) ?: return false
+        val current = (if (element.compareTo(closest.value) == 0) closest else null) ?: return false
+
+        size--
+        if (current == root) {
+            root = null
+            return true
+        }
+
+        val parent = findParent(current.value)
+
+        if (current.right == null) {
+            if (parent == null) {
+                root = current.left
+            } else {
+                val comparison = parent.value.compareTo(current.value)
+
+                if (comparison > 0) {
+                    parent.left = current.left
+                } else if (comparison < 0) {
+                    parent.right = current.left
+                }
+            }
+        } else if (current.right!!.left == null) {
+            current.right!!.left = current.left
+            if (parent == null) {
+                root = current.right
+            } else {
+                val comparison = parent.value.compareTo(current.value)
+                if (comparison > 0) {
+                    parent.left = current.right
+                } else if (comparison < 0) {
+                    parent.right = current.right
+                }
+            }
+        } else {
+            var leftmost = current.right!!.left
+            var leftmostParent = current.right
+            while (leftmost!!.left != null) {
+                leftmostParent = leftmost
+                leftmost = leftmost.left
+
+            }
+            leftmostParent!!.left = leftmost.right
+            leftmost.left = current.left
+            leftmost.right = current.right
+            if (parent == null) {
+                root = leftmost
+            } else {
+                val comparison = parent.value.compareTo(current.value)
+                if (comparison > 0) {
+                    parent.left = leftmost
+                } else if (comparison < 0) {
+                    parent.right = leftmost
+                }
+            }
+        }
+        return true
+
     }
 
     override operator fun contains(element: T): Boolean {
@@ -84,6 +166,7 @@ class KtBinaryTree<T : Comparable<T>> : AbstractMutableSet<T>(), CheckableSorted
          * Средняя
          */
         private fun findNext(): Node<T>? {
+
             TODO()
         }
 
