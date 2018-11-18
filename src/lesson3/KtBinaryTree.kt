@@ -1,6 +1,6 @@
 package lesson3
 
-import java.util.SortedSet
+import java.util.*
 import kotlin.NoSuchElementException
 
 // Attention: comparable supported but comparator is not
@@ -11,7 +11,7 @@ class KtBinaryTree<T : Comparable<T>> : AbstractMutableSet<T>(), CheckableSorted
     override var size = 0
         private set
 
-    private class Node<T>(val value: T) {
+    private class Node<T>(var value: T) {
 
         var left: Node<T>? = null
 
@@ -56,7 +56,7 @@ class KtBinaryTree<T : Comparable<T>> : AbstractMutableSet<T>(), CheckableSorted
      */
 
 
-    private fun findParent(value: T): Node<T>? {
+    /*  private fun findParent(value: T): Node<T>? {
         var current = root
         var parent = root
 
@@ -76,10 +76,47 @@ class KtBinaryTree<T : Comparable<T>> : AbstractMutableSet<T>(), CheckableSorted
         }
         return if (parent == root) null else parent
     }
+*/
 
+    private fun removeElInSubTree(element: T, subtree: Node<T>?): Node<T>? {
+        @SuppressWarnings
+        if (subtree == null) {
+            return null
+        }
+        val comparison = element.compareTo(subtree.value)
+        if (comparison < 0)
+            subtree.left = removeElInSubTree(element, subtree.left)
+        else if (comparison > 0)
+            subtree.right = removeElInSubTree(element, subtree.right)
+        else {
+            if (subtree.left != null && subtree.right != null) {
+                var clonedSubTrR = subtree.right
+                while (clonedSubTrR?.left != null) {
+                    clonedSubTrR = clonedSubTrR.left
+                }
+                subtree.value = clonedSubTrR!!.value
+                subtree.right = removeElInSubTree(subtree.value, subtree.right)
+            } else return if (subtree.left != null) {
+                subtree.left
+            } else {
+                subtree.right
+            }
+        }
+        return subtree
+    }
 
+    //ресурсоемкость R = O(1)
+    //трудоемкость T = O(size)
     override fun remove(element: T): Boolean {
-        val closest = find(element) ?: return false
+        root = removeElInSubTree(element, root!!)
+        size--
+        return true
+    }
+
+    //закомментированный вариант по неизвестной причине кидает NotImplementedError из метода findNext
+    //при попытке тестирования
+
+    /*val closest = find(element) ?: return false
         val current = (if (element.compareTo(closest.value) == 0) closest else null) ?: return false
 
         size--
@@ -137,8 +174,8 @@ class KtBinaryTree<T : Comparable<T>> : AbstractMutableSet<T>(), CheckableSorted
             }
         }
         return true
+*/
 
-    }
 
     override operator fun contains(element: T): Boolean {
         val closest = find(element)
@@ -165,12 +202,36 @@ class KtBinaryTree<T : Comparable<T>> : AbstractMutableSet<T>(), CheckableSorted
          * Поиск следующего элемента
          * Средняя
          */
-        private fun findNext(): Node<T>? {
 
-            TODO()
+
+
+        private var nodeStack = Stack<Node<T>>()
+
+        constructor() {
+            current = root
+            while (current != null) {
+                nodeStack.push(current)
+                current = current!!.left
+            }
         }
 
-        override fun hasNext(): Boolean = findNext() != null
+        //Ресурсоемкость R = O(log n)
+        //Трудоемкость T = O(n)
+
+        private fun findNext(): Node<T>? {
+            current = nodeStack.pop()
+            var stackUpd = current
+            if (stackUpd!!.right != null) {
+                stackUpd = stackUpd.right
+                while (stackUpd != null) {
+                    nodeStack.push(stackUpd)
+                    stackUpd = stackUpd.left
+                }
+            }
+            return current
+        }
+
+        override fun hasNext(): Boolean = !nodeStack.empty()
 
         override fun next(): T {
             current = findNext()
