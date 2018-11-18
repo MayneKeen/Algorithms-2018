@@ -204,7 +204,6 @@ class KtBinaryTree<T : Comparable<T>> : AbstractMutableSet<T>(), CheckableSorted
          */
 
 
-
         private var nodeStack = Stack<Node<T>>()
 
         constructor() {
@@ -243,7 +242,17 @@ class KtBinaryTree<T : Comparable<T>> : AbstractMutableSet<T>(), CheckableSorted
          * Сложная
          */
         override fun remove() {
-            TODO()
+            var value = current?.value
+            when (hasNext()) {
+                true -> {
+                    this@KtBinaryTree.remove(value)
+                    next()
+                }
+                false -> {
+                    this@KtBinaryTree.remove(value)
+                    current = find(value!!)
+                }
+            }
         }
     }
 
@@ -264,7 +273,17 @@ class KtBinaryTree<T : Comparable<T>> : AbstractMutableSet<T>(), CheckableSorted
      * Сложная
      */
     override fun headSet(toElement: T): SortedSet<T> {
-        TODO()
+        var iterator = BinaryTreeIterator()
+        var headSet = BinaryTree<T>()
+
+        while (iterator.hasNext()) {
+            val current = iterator.next()
+            val comparison = current.compareTo(toElement)
+
+            if (comparison < 0)
+                headSet.add(current)
+        }
+        return headSet
     }
 
     /**
@@ -272,7 +291,17 @@ class KtBinaryTree<T : Comparable<T>> : AbstractMutableSet<T>(), CheckableSorted
      * Сложная
      */
     override fun tailSet(fromElement: T): SortedSet<T> {
-        TODO()
+        var iterator = BinaryTreeIterator()
+        var tailSet = BinaryTree<T>()
+
+        while (iterator.hasNext()) {
+            val current = iterator.next()
+            val comparison = current.compareTo(fromElement)
+
+            if (comparison >= 0)
+                tailSet.add(current)
+        }
+        return tailSet
     }
 
     override fun first(): T {

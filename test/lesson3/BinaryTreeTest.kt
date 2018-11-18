@@ -109,7 +109,40 @@ class BinaryTreeTest {
                 assertEquals(treeIt.next(), binaryIt.next())
             }
         }
+
+        //my test
+        val testList = mutableListOf<Int>()
+        for (i in 0 until 16) {
+            testList.add(16)
+        }
+
+        val treeSet = TreeSet<Int>()
+        val binSet = create()
+        for (element in testList) {
+            treeSet += element
+            binSet += element
+        }
+        val treeIterator = treeSet.iterator()
+        val binIterator = binSet.iterator()
+        println("Traversing $testList")
+        while (treeIterator.hasNext()) {
+            assertEquals(treeIterator.next(), binIterator.next())
+        }
+
+        for (i in 1..100) {
+            testList.add(random.nextInt(100))
+        }
+        for (element in testList) {
+            treeSet += element
+            binSet += element
+        }
+        println("Traversing $testList")
+        while (treeIterator.hasNext()) {
+            assertEquals(treeIterator.next(), binIterator.next())
+        }
     }
+
+
 
     @Test
     @Tag("Normal")
