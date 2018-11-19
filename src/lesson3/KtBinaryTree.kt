@@ -108,7 +108,11 @@ class KtBinaryTree<T : Comparable<T>> : AbstractMutableSet<T>(), CheckableSorted
     //ресурсоемкость R = O(1)
     //трудоемкость T = O(size)
     override fun remove(element: T): Boolean {
-        root = removeElInSubTree(element, root!!)
+        if (root == null || element == null)
+            return false
+        if (!this.contains(element))
+            return false
+        root = removeElInSubTree(element, root)
         size--
         return true
     }
@@ -218,16 +222,21 @@ class KtBinaryTree<T : Comparable<T>> : AbstractMutableSet<T>(), CheckableSorted
         //Трудоемкость T = O(n)
 
         private fun findNext(): Node<T>? {
-            current = nodeStack.pop()
-            var stackUpd = current
-            if (stackUpd!!.right != null) {
-                stackUpd = stackUpd.right
-                while (stackUpd != null) {
-                    nodeStack.push(stackUpd)
-                    stackUpd = stackUpd.left
+            try {
+                current = nodeStack.pop()
+                var stackUpd = current
+                if (stackUpd!!.right != null) {
+                    stackUpd = stackUpd.right
+                    while (stackUpd != null) {
+                        nodeStack.push(stackUpd)
+                        stackUpd = stackUpd.left
+                    }
                 }
+                return current
+            } catch (e: EmptyStackException) {
+                println("Empty tree")
+                return null
             }
-            return current
         }
 
         override fun hasNext(): Boolean = !nodeStack.empty()
@@ -249,6 +258,8 @@ class KtBinaryTree<T : Comparable<T>> : AbstractMutableSet<T>(), CheckableSorted
                     next()
                 }
                 false -> {
+                    if (value == null)
+                        throw NoSuchElementException()
                     this@KtBinaryTree.remove(value)
                     current = find(value!!)
                 }
