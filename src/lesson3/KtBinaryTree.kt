@@ -118,7 +118,7 @@ class KtBinaryTree<T : Comparable<T>> : AbstractMutableSet<T>(), CheckableSorted
     }
 
     //закомментированный вариант по неизвестной причине кидает NotImplementedError из метода findNext
-    //при попытке тестирования
+                                                                                    //при попытке тестирования
 
     /*val closest = find(element) ?: return false
         val current = (if (element.compareTo(closest.value) == 0) closest else null) ?: return false
@@ -222,7 +222,7 @@ class KtBinaryTree<T : Comparable<T>> : AbstractMutableSet<T>(), CheckableSorted
         //Трудоемкость T = O(n)
 
         private fun findNext(): Node<T>? {
-            try {
+            return try {
                 current = nodeStack.pop()
                 var stackUpd = current
                 if (stackUpd!!.right != null) {
@@ -232,10 +232,10 @@ class KtBinaryTree<T : Comparable<T>> : AbstractMutableSet<T>(), CheckableSorted
                         stackUpd = stackUpd.left
                     }
                 }
-                return current
+                current
             } catch (e: EmptyStackException) {
                 println("Empty tree")
-                return null
+                null
             }
         }
 
@@ -255,6 +255,9 @@ class KtBinaryTree<T : Comparable<T>> : AbstractMutableSet<T>(), CheckableSorted
 
 
         override fun remove() {
+            if (current == null)
+                throw NoSuchElementException()
+
             var value = current?.value
             when (hasNext()) {
                 true -> {
@@ -262,8 +265,6 @@ class KtBinaryTree<T : Comparable<T>> : AbstractMutableSet<T>(), CheckableSorted
                     next()
                 }
                 false -> {
-                    if (value == null)
-                        throw NoSuchElementException()
                     this@KtBinaryTree.remove(value)
                     current = find(value!!)
                 }
@@ -287,36 +288,49 @@ class KtBinaryTree<T : Comparable<T>> : AbstractMutableSet<T>(), CheckableSorted
      * Найти множество всех элементов меньше заданного
      * Сложная
      */
-    override fun headSet(toElement: T): SortedSet<T> {
-        var iterator = BinaryTreeIterator()
-        var headSet = BinaryTree<T>()
+    //Ресурсоемкость R = O(n)
+    //Трудоемкость T = O(n)
+    override fun headSet(toElement: T?): SortedSet<T> {
+        if (root == null || toElement == null) throw NoSuchElementException()
 
-        while (iterator.hasNext()) {
-            val current = iterator.next()
-            val comparison = current.compareTo(toElement)
+        val result = TreeSet<T>()
+        headSetHelper(result, toElement, root)
+        return result
+    }
 
-            if (comparison < 0)
-                headSet.add(current)
-        }
-        return headSet
+    private fun headSetHelper(headSet: SortedSet<T>, value: T, currentNode: Node<T>?) {
+        if (currentNode == null)
+            return
+        headSetHelper(headSet, value, currentNode.left)
+        if (currentNode.value < value)
+            headSet.add(currentNode.value)
+        headSetHelper(headSet, value, currentNode.right)
+
     }
 
     /**
      * Найти множество всех элементов больше или равных заданного
      * Сложная
      */
-    override fun tailSet(fromElement: T): SortedSet<T> {
-        var iterator = BinaryTreeIterator()
-        var tailSet = BinaryTree<T>()
+    //Ресурсоемкость R = O(n)
+    //Трудоемкость T = O(n)
+    override fun tailSet(fromElement: T?): SortedSet<T> {
 
-        while (iterator.hasNext()) {
-            val current = iterator.next()
-            val comparison = current.compareTo(fromElement)
+        if (root == null || fromElement == null) throw NoSuchElementException()
 
-            if (comparison >= 0)
-                tailSet.add(current)
-        }
-        return tailSet
+        val result = TreeSet<T>()
+        tailSetHelper(result, fromElement, root)
+        return result
+    }
+
+    private fun tailSetHelper(tailSet: SortedSet<T>, value: T, currentNode: Node<T>?) {
+        if (currentNode == null)
+            return
+        tailSetHelper(tailSet, value, currentNode.left)
+        if (currentNode.value >= value)
+            tailSet.add(currentNode.value)
+        tailSetHelper(tailSet, value, currentNode.right)
+
     }
 
     override fun first(): T {

@@ -40,6 +40,44 @@ abstract class AbstractHeadTailTest {
         for (i in 1..10)
             assertEquals(true, set.contains(i))
 
+        //my tests
+        //empty tree
+        val binSet = KtBinaryTree<Int>()
+        try {
+            binSet.headSet(1)
+        } catch (e: NoSuchElementException) {
+            println("caught a NoSuchElementException - empty tree")
+        }
+
+        //trying to call headSet method with null as an argument
+        try {
+            tree.headSet(null)
+        } catch (e: NoSuchElementException) {
+            println("caught a NoSuchElementException - null asAnArg")
+        }
+
+        //trying to call method for a nonexistent node
+        tree.add(12)
+        tree.add(21)
+        tree.add(212)
+        tree.add(121)
+
+        val newSet: SortedSet<Int> = tree.headSet(11)
+        assertEquals(true, newSet.contains(1))
+        assertEquals(true, newSet.contains(2))
+        assertEquals(true, newSet.contains(3))
+        assertEquals(true, newSet.contains(4))
+        assertEquals(true, newSet.contains(5))
+        assertEquals(true, newSet.contains(6))
+        assertEquals(true, newSet.contains(7))
+        assertEquals(true, newSet.contains(8))
+        assertEquals(true, newSet.contains(9))
+        assertEquals(true, newSet.contains(10))
+        assertEquals(false, newSet.contains(12))
+        assertEquals(false, newSet.contains(21))
+        assertEquals(false, newSet.contains(212))
+        assertEquals(false, newSet.contains(121))
+
     }
 
     protected fun doTailSetTest() {
@@ -58,6 +96,50 @@ abstract class AbstractHeadTailTest {
         set = tree.tailSet(-128)
         for (i in 1..10)
             assertEquals(true, set.contains(i))
+
+
+
+
+
+        //my tests
+        //empty tree
+        val binSet = KtBinaryTree<Int>()
+        try {
+            binSet.tailSet(1)
+        } catch (e: NoSuchElementException) {
+            println("caught a NoSuchElementException - empty tree")
+        }
+
+        //trying to call headSet method with null as an argument
+        try {
+            tree.tailSet(null)
+        } catch (e: NoSuchElementException) {
+            println("caught a NoSuchElementException - null asAnArg")
+        }
+
+        //trying to call method for a nonexistent node
+        tree.add(12)
+        tree.add(11)
+        tree.add(21)
+        tree.add(212)
+        tree.add(121)
+
+        val newSet: SortedSet<Int> = tree.tailSet(11)
+        assertEquals(false, newSet.contains(1))
+        assertEquals(false, newSet.contains(2))
+        assertEquals(false, newSet.contains(3))
+        assertEquals(false, newSet.contains(4))
+        assertEquals(false, newSet.contains(5))
+        assertEquals(false, newSet.contains(6))
+        assertEquals(false, newSet.contains(7))
+        assertEquals(false, newSet.contains(8))
+        assertEquals(false, newSet.contains(9))
+        assertEquals(false, newSet.contains(10))
+        assertEquals(true, newSet.contains(11))
+        assertEquals(true, newSet.contains(12))
+        assertEquals(true, newSet.contains(21))
+        assertEquals(true, newSet.contains(212))
+        assertEquals(true, newSet.contains(121))
 
     }
 
@@ -92,6 +174,10 @@ abstract class AbstractHeadTailTest {
         assertEquals(6, set.size)
         assertEquals(10, tree.size)
     }
+
+
+
+
 
     protected fun doSubSetTest() {
         TODO()
