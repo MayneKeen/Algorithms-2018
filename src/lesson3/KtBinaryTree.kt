@@ -105,8 +105,8 @@ class KtBinaryTree<T : Comparable<T>> : AbstractMutableSet<T>(), CheckableSorted
         return subtree
     }
 
-    //ресурсоемкость R = O(1)
-    //трудоемкость T = O(size)
+    //Ресурсоемкость R = O(1)
+    //Трудоемкость T = O(h), где h - высота дерева
     override fun remove(element: T): Boolean {
         if (root == null || element == null)
             return false
@@ -250,6 +250,10 @@ class KtBinaryTree<T : Comparable<T>> : AbstractMutableSet<T>(), CheckableSorted
          * Удаление следующего элемента
          * Сложная
          */
+        //Трудоемкость T = 0(n)
+        //Ресурсоемкость R = O(log n)
+
+
         override fun remove() {
             var value = current?.value
             when (hasNext()) {
