@@ -2,6 +2,13 @@
 
 package lesson5
 
+import java.util.*
+import kotlin.collections.ArrayList
+import java.util.HashSet
+
+
+
+
 /**
  * Эйлеров цикл.
  * Средняя
@@ -28,6 +35,8 @@ package lesson5
  * Справка: Эйлеров цикл -- это цикл, проходящий через все рёбра
  * связного графа ровно по одному разу
  */
+
+
 fun Graph.findEulerLoop(): List<Graph.Edge> {
     TODO()
 }
@@ -88,8 +97,36 @@ fun Graph.minimumSpanningTree(): Graph {
  *
  * Эта задача может быть зачтена за пятый и шестой урок одновременно
  */
+//n = graph.vertices.size
+//Ресурсоемкость R = O(n)
+//Трудоемкость T = O(n)
 fun Graph.largestIndependentVertexSet(): Set<Graph.Vertex> {
-    TODO()
+    var graph = this
+
+    val result = HashSet<Graph.Vertex>()
+    val invResult = HashSet<Graph.Vertex>()
+
+    val edges = graph.edges
+
+    var first: Graph.Edge? = null
+
+    for (edge in edges) {
+        val eBegin = edge.begin
+        val eEnd = edge.end
+
+        if (result.isEmpty() || eBegin === first!!.begin) first = edge
+        if (!result.contains(first!!.end)) {
+            result.add(first.end)
+            invResult.add(first.begin)
+        }
+        if (result.contains(eBegin)) invResult.add(eEnd)
+        if (invResult.contains(eBegin)) result.add(eEnd)
+    }
+    return if (result.size > invResult.size)
+        result
+    else
+        invResult
+
 }
 
 /**
@@ -113,5 +150,37 @@ fun Graph.largestIndependentVertexSet(): Set<Graph.Vertex> {
  * Ответ: A, E, J, K, D, C, H, G, B, F, I
  */
 fun Graph.longestSimplePath(): Path {
-    TODO()
+
+    val graph = this
+    var vertices = graph.vertices
+    val first = vertices.iterator().next()
+    var simplest = Path(first)
+
+    var deque = ArrayDeque<Path>()
+
+    for (vertex in vertices) {
+        deque.add(Path(vertex))
+    }
+
+    while (!deque.isEmpty()) {
+        var currentPath = deque.pop()
+        var vs = currentPath.vertices
+
+        if (currentPath.length > simplest.length) {
+            simplest = currentPath
+            if (vs.size > vertices.size) break
+        }
+
+        var neighbours = graph.getNeighbors(vs[vs.size - 1])
+
+        for (neighbour in neighbours) {
+            if (currentPath.contains(neighbour)) {
+                continue
+            } else {
+                deque.push(Path(currentPath, graph, neighbour))
+            }
+        }
+    }
+
+    return simplest
 }

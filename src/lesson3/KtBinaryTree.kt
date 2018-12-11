@@ -18,6 +18,11 @@ class KtBinaryTree<T : Comparable<T>> : AbstractMutableSet<T>(), CheckableSorted
         var right: Node<T>? = null
     }
 
+
+    private var treeSubsets = mutableListOf<CheckableSortedSet>()
+
+
+
     override fun add(element: T): Boolean {
         val closest = find(element)
         val comparison = if (closest == null) -1 else element.compareTo(closest.value)
@@ -36,6 +41,9 @@ class KtBinaryTree<T : Comparable<T>> : AbstractMutableSet<T>(), CheckableSorted
                 closest.right = newNode
             }
         }
+        for (i in 0 until treeSubsets.size) {
+            treeSubsets[i].reAdd(element)
+        }
         size++
         return true
     }
@@ -49,6 +57,8 @@ class KtBinaryTree<T : Comparable<T>> : AbstractMutableSet<T>(), CheckableSorted
         val right = node.right
         return right == null || right.value > node.value && checkInvariant(right)
     }
+
+
 
     /**
      * Удаление элемента в дереве
@@ -113,12 +123,15 @@ class KtBinaryTree<T : Comparable<T>> : AbstractMutableSet<T>(), CheckableSorted
         if (!this.contains(element))
             return false
         root = removeElInSubTree(element, root)
+        for (i in 0 until treeSubsets.size) {
+            treeSubsets[i].reRemove(element)
+        }
         size--
         return true
     }
 
     //закомментированный вариант по неизвестной причине кидает NotImplementedError из метода findNext
-                                                                                    //при попытке тестирования
+    //при попытке тестирования
 
     /*val closest = find(element) ?: return false
         val current = (if (element.compareTo(closest.value) == 0) closest else null) ?: return false
@@ -284,28 +297,84 @@ class KtBinaryTree<T : Comparable<T>> : AbstractMutableSet<T>(), CheckableSorted
         TODO()
     }
 
+
+    inner class CheckableSortedSet(parentTree: KtBinaryTree<T>, from: Boolean, to: Boolean,
+                                   lowestPossible: T?, highestPossible: T?,
+                                   isHeadSet: Boolean, isTailSet: Boolean) : TreeSet<T>() {
+        private var parentTree: KtBinaryTree<T>? = null
+        private var highestPossible: T? = null
+        private var lowestPossible: T? = null
+
+        private var from = true
+        private var to = false
+
+        private var isTailSet: Boolean = true
+        private var isHeadSet: Boolean = false
+
+        init {
+            this.parentTree = parentTree
+
+            this.highestPossible = highestPossible
+            this.lowestPossible = lowestPossible
+            this.from = from
+            this.to = to
+            this.isHeadSet = isHeadSet
+            this.isTailSet = isTailSet
+        }
+
+
+
+        fun reAdd(value: T) {
+            when {
+                from && to ->
+                    if ((value >= lowestPossible!! || isHeadSet)
+                            && (value <= highestPossible!! || isTailSet))
+                        super.add(value)
+
+                !from && to -> {
+                    if ((value > lowestPossible!! || isHeadSet) &&
+                            (value <= highestPossible!! || isTailSet))
+                        super.add(value)
+                }
+                from && !to -> {
+                    if ((value >= lowestPossible!! || isHeadSet) &&
+                            (value < highestPossible!! || isTailSet))
+                        super.add(value)
+                }
+                !from && !to -> {
+                    if ((value > lowestPossible!! || isHeadSet) &&
+                            (value < highestPossible!! || isTailSet))
+                        super.add(value)
+                }
+            }
+        }
+
+        override fun remove(element: T): Boolean {
+            parentTree?.remove(element)
+            return super.remove(element)
+        }
+
+        fun reRemove(value: T) {
+            super.remove(value)
+        }
+
+        override fun add(element: T): Boolean {
+            parentTree?.add(element)
+            return super.add(element)
+        }
+
+    }
+
+
+
     /**
      * Найти множество всех элементов меньше заданного
      * Сложная
      */
     //Ресурсоемкость R = O(n)
     //Трудоемкость T = O(n)
-    override fun headSet(toElement: T?): SortedSet<T> {
-        if (root == null || toElement == null) throw NoSuchElementException()
-
-        val result = TreeSet<T>()
-        headSetHelper(result, toElement, root)
-        return result
-    }
-
-    private fun headSetHelper(headSet: SortedSet<T>, value: T, currentNode: Node<T>?) {
-        if (currentNode == null)
-            return
-        headSetHelper(headSet, value, currentNode.left)
-        if (currentNode.value < value)
-            headSet.add(currentNode.value)
-        headSetHelper(headSet, value, currentNode.right)
-
+    override fun headSet(toElement: T?): CheckableSortedSet {
+        return CheckableSortedSet(this, false, true, null, toElement, true, false)
     }
 
     /**
