@@ -97,11 +97,18 @@ fun Graph.minimumSpanningTree(): Graph {
  *
  * Эта задача может быть зачтена за пятый и шестой урок одновременно
  */
+
 //n = graph.vertices.size
 //Ресурсоемкость R = O(n)
 //Трудоемкость T = O(n)
+//т.к. в худшем случае пройдем по всем вершинам несколько раз
 fun Graph.largestIndependentVertexSet(): Set<Graph.Vertex> {
     var graph = this
+
+    if (graph.vertices.isEmpty()) {
+        return emptySet()
+    }
+    if (graph.edges.isEmpty()) return graph.vertices
 
     val result = HashSet<Graph.Vertex>()
     val invResult = HashSet<Graph.Vertex>()
@@ -149,12 +156,15 @@ fun Graph.largestIndependentVertexSet(): Set<Graph.Vertex> {
  *
  * Ответ: A, E, J, K, D, C, H, G, B, F, I
  */
+//Трудоемкость T = O(v)
+//Ресурсоемкость R = O(v)
 fun Graph.longestSimplePath(): Path {
 
     val graph = this
+
     var vertices = graph.vertices
     val first = vertices.iterator().next()
-    var simplest = Path(first)
+    var longest = Path(first)
 
     var deque = ArrayDeque<Path>()
 
@@ -166,8 +176,8 @@ fun Graph.longestSimplePath(): Path {
         var currentPath = deque.pop()
         var vs = currentPath.vertices
 
-        if (currentPath.length > simplest.length) {
-            simplest = currentPath
+        if (currentPath.length > longest.length) {
+            longest = currentPath
             if (vs.size > vertices.size) break
         }
 
@@ -181,6 +191,5 @@ fun Graph.longestSimplePath(): Path {
             }
         }
     }
-
-    return simplest
+    return longest
 }

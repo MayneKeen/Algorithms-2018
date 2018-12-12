@@ -2,6 +2,7 @@ package lesson5
 
 import lesson5.impl.GraphBuilder
 import kotlin.test.assertEquals
+import kotlin.test.assertNull
 import kotlin.test.assertTrue
 
 abstract class AbstractGraphTests {
@@ -65,6 +66,8 @@ abstract class AbstractGraphTests {
         }.build()
         val loop2 = graph2.findEulerLoop()
         loop2.assert(true, graph2)
+
+
     }
 
     fun minimumSpanningTree(minimumSpanningTree: Graph.() -> Graph) {
@@ -135,7 +138,70 @@ abstract class AbstractGraphTests {
         val independent = graph.largestIndependentVertexSet()
         assertEquals(setOf(graph["A"], graph["D"], graph["E"], graph["F"], graph["G"], graph["J"]),
                 independent)
+
+/*
+*a custom test
+*a graph without connections
+*
+ */
+        val firstGraph = GraphBuilder().apply {
+            val a = addVertex("A")
+            val b = addVertex("B")
+            val c = addVertex("C")
+            val d = addVertex("D")
+            val e = addVertex("E")
+            val f = addVertex("F")
+            val g = addVertex("G")
+
+
+        }.build()
+        val ind = firstGraph.largestIndependentVertexSet()
+        assertEquals(setOf(firstGraph["A"], firstGraph["B"], firstGraph["C"], firstGraph["D"],
+                firstGraph["E"], firstGraph["F"], firstGraph["G"]),
+                ind)
+
+
+
+        /*
+*a custom test
+*an empty graph
+*
+ */
+        val secondGraph = GraphBuilder().apply {
+
+        }.build()
+        val ind2 = secondGraph.largestIndependentVertexSet()
+        assertEquals(emptySet(), ind2)
+
+
+        /*
+*a custom test
+*a graph with only one element (WITH CONNECTION)
+*
+*/
+        val thirdGraph = GraphBuilder().apply {
+            val a = addVertex("A")
+            addConnection(a, a)
+        }.build()
+        val ind3 = thirdGraph.largestIndependentVertexSet()
+        assertEquals(setOf(thirdGraph["A"]), ind3)
+
+
+/*
+        *a custom test
+        *a graph with only one element (WITHOUT ANY CONNECTIONS)
+        *
+        */
+        val fourthGraph = GraphBuilder().apply {
+            val a = addVertex("A")
+
+        }.build()
+        val ind4 = fourthGraph.largestIndependentVertexSet()
+        assertEquals(setOf(fourthGraph["A"]), ind4)
+
+
     }
+
 
     fun longestSimplePath(longestSimplePath: Graph.() -> Path) {
         val graph = GraphBuilder().apply {
@@ -177,6 +243,94 @@ abstract class AbstractGraphTests {
         }.build()
         val longestPath2 = graph2.longestSimplePath()
         assertEquals(10, longestPath2.length)
-    }
 
+
+        /*a custom test
+    *an empty graph
+     *
+     *val firstGraph = GraphBuilder().apply {
+     *   }.build()
+     *   val longest1 = firstGraph.longestSimplePath()
+     *   assertNull(longest1)
+     *
+     *
+     *  IDK what to write to correctly exit the function
+     *
+     *
+        */
+
+
+        /*a custom test
+        *   A - B - C - D - E - F - G - H - I
+        *     \                             /
+        *      K - - - - - - - - - - - - - J
+        */
+        val secondGraph = GraphBuilder().apply {
+            val a = addVertex("A")
+            val b = addVertex("B")
+            val c = addVertex("C")
+            val d = addVertex("D")
+            val e = addVertex("E")
+            val f = addVertex("F")
+            val g = addVertex("G")
+            val h = addVertex("H")
+            val i = addVertex("I")
+            val j = addVertex("J")
+            val k = addVertex("K")
+            addConnection(a, b)
+            addConnection(b, c)
+            addConnection(c, d)
+            addConnection(d, e)
+            addConnection(e, f)
+            addConnection(f, g)
+            addConnection(g, h)
+            addConnection(h, i)
+            addConnection(i, j)
+            addConnection(j, k)
+            addConnection(k, a)
+        }.build()
+        val longest2 = secondGraph.longestSimplePath()
+        assertEquals(10, longest2.length)
+
+
+        /*a custom test
+    *the graph contains only one element
+    *      -A-
+    *     |   |
+    *       -
+     */
+
+        val thirdGraph = GraphBuilder().apply {
+            val a = addVertex("A")
+            addConnection(a, a)
+
+        }.build()
+        val longest3 = thirdGraph.longestSimplePath()
+        assertEquals(0, longest3.length)
+
+
+        /*a custom test
+        *a graph without connections
+        *   A  B  C  D  E  F  G  H  I  K  J
+        *
+        *
+        */
+        val fourthGraph = GraphBuilder().apply {
+            val a = addVertex("A")
+            val b = addVertex("B")
+            val c = addVertex("C")
+            val d = addVertex("D")
+            val e = addVertex("E")
+            val f = addVertex("F")
+            val g = addVertex("G")
+            val h = addVertex("H")
+            val i = addVertex("I")
+            val j = addVertex("J")
+            val k = addVertex("K")
+        }.build()
+        val longest4 = fourthGraph.longestSimplePath()
+        assertEquals(0, longest4.length)
+
+
+    }
 }
