@@ -2,7 +2,12 @@ package lesson6;
 
 import kotlin.NotImplementedError;
 
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
 @SuppressWarnings("unused")
 public class JavaDynamicTasks {
@@ -57,7 +62,86 @@ public class JavaDynamicTasks {
      *
      * Здесь ответ 2 + 3 + 4 + 1 + 2 = 12
      */
-    public static int shortestPathOnField(String inputName) {
+
+/*   Изначально написал на java, т.к. в котлине запутался в синтаксисе, связанном
+     с двумерными массивами (в методе readField), копипастнул в DynamicTasks.kt, idea код перевела
+     не бейте, если вырвиглазный код получился
+
+
+    static int[] lH(String inputName) throws IOException {
+        Scanner scanner = new Scanner(new FileReader(inputName));
+        List<String> list = new ArrayList<>();
+        int[] result = new int[2];
+        int length, height;
+
+        while(scanner.hasNextLine())
+            list.add(scanner.nextLine());
+        scanner.close();
+        result[1] = list.size();                 //length
+        result[0] = list.get(0).length()/2 + 1;   //height
+        return result;
+    }
+
+
+    static int[][] readField(String inputName, int length, int height) throws IOException{
+        int[][] result;
+        Scanner scanner = new Scanner(new FileReader(inputName));
+        List<String> list = new ArrayList<>();
+
+        while(scanner.hasNextLine())
+            list.add(scanner.nextLine());
+        scanner.close();
+        result = new int[length][height];
+
+        for (int i = 0; i < length; i ++) {
+
+            String temp = list.get(i);
+            String[] arr = temp.split("\\s");
+
+            for (int j = 0; j < height; j++) {
+                result[i][j] = Integer.parseInt(arr[j]);
+            }
+        }
+
+        return result;
+    }
+
+    static int recFunction(int i, int j, int[][] f) {
+            if (i == 0 && j == 0)
+            {
+                return f[0][0];
+            }
+            if (j==0&&i!=0)
+            {
+                return recFunction(i - 1, 0, f) + f[i][0];
+            }
+            if (i==0&&j!=0)
+            {
+                return recFunction(0, j - 1, f) + f[0][j];
+            }
+            if (i!=0&j!=0)
+            {
+                return Math.min(Math.min(recFunction(i - 1, j - 1, f), recFunction(i - 1, j, f)),
+                        recFunction(i, j - 1, f)) + f[i][j];
+            }
+            return 1;
+
+        }
+*/
+
+    public static int shortestPathOnField(String inputName) throws IOException{
+        /*int f[][];
+        int length, height;
+        int[] temp = lH(inputName);
+        length = temp[1];
+        height = temp[0];
+
+        f = readField(inputName, length, height);
+
+        System.out.print(f[length-1][height-1]);
+
+        return recFunction(length-1, height-1, f);
+        */
         throw new NotImplementedError();
     }
 

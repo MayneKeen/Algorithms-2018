@@ -2,6 +2,11 @@
 
 package lesson6
 
+import java.io.File
+import java.io.FileReader
+import java.io.IOException
+import java.util.*
+
 /**
  * Наибольшая общая подпоследовательность.
  * Средняя
@@ -53,8 +58,82 @@ fun longestIncreasingSubSequence(list: List<Int>): List<Int> {
  *
  * Здесь ответ 2 + 3 + 4 + 1 + 2 = 12
  */
+@Throws(IOException::class)
+internal fun lH(inputName: String): IntArray {
+    val scanner = Scanner(FileReader(inputName))
+    val list = ArrayList<String>()
+    val result = IntArray(2)
+    val length: Int
+    val height: Int
+
+    while (scanner.hasNextLine())
+        list.add(scanner.nextLine())
+    scanner.close()
+    result[1] = list.size                 //length
+    result[0] = list[0].length / 2 + 1   //height
+    return result
+}
+
+
+@Throws(IOException::class)
+internal fun readField(inputName: String, length: Int, height: Int): Array<IntArray> {
+    val result: Array<IntArray> = Array(length) { IntArray(height) }
+    val scanner = Scanner(FileReader(inputName))
+    val list = ArrayList<String>()
+
+    while (scanner.hasNextLine())
+        list.add(scanner.nextLine())
+    scanner.close()
+
+    for (i in 0 until length) {
+
+        val temp = list[i]
+        val arr = temp.split("\\s".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
+
+        for (j in 0 until height) {
+            result[i][j] = Integer.parseInt(arr[j])
+        }
+    }
+
+    return result
+}
+
+internal fun recFunction(i: Int, j: Int, f: Array<IntArray>): Int {
+    if (i == 0 && j == 0) {
+        return f[0][0]
+    }
+    if (j == 0 && i != 0) {
+        return recFunction(i - 1, 0, f) + f[i][0]
+    }
+    if (i == 0 && j != 0) {
+        return recFunction(0, j - 1, f) + f[0][j]
+    }
+    return if ((i != 0) and (j != 0)) {
+        Math.min(Math.min(recFunction(i - 1, j - 1, f), recFunction(i - 1, j, f)),
+                recFunction(i, j - 1, f)) + f[i][j]
+    } else 1
+
+}
+
+
+//      Изначально написал на java, т.к. в котлине запутался в синтаксисе, связанном
+//     с двумерными массивами (в методе readField), копипастнул в DynamicTasks.kt, idea код сама перевела
+//     не бейте, если вырвиглазный код получился
+
+@Throws(IOException::class)
 fun shortestPathOnField(inputName: String): Int {
-    TODO()
+    val f: Array<IntArray>
+    val length: Int
+    val height: Int
+    val temp = lH(inputName)
+    length = temp[1]
+    height = temp[0]
+
+    f = readField(inputName, length, height)
+
+    print(f[length - 1][height - 1])
+
+    return recFunction(length - 1, height - 1, f)
 }
 
 // Задачу "Максимальное независимое множество вершин в графе без циклов"
