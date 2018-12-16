@@ -70,6 +70,7 @@ internal fun lH(inputName: String): IntArray {
     while (scanner.hasNextLine())
         list.add(scanner.nextLine())
     scanner.close()
+    if (list.isEmpty()) return intArrayOf()
     result[1] = list.size                 //length
     result[0] = list[0].length / 2 + 1   //height
     return result
@@ -117,9 +118,10 @@ internal fun recFunction(i: Int, j: Int, f: Array<IntArray>): Int {
 }
 
 
-//      Изначально написал на java, т.к. в котлине запутался в синтаксисе, связанном
-//     с двумерными массивами (в методе readField), копипастнул в DynamicTasks.kt, idea код сама перевела
-//     не бейте, если вырвиглазный код получился
+/*      Изначально написал на java, т.к. в котлине запутался в синтаксисе, связанном
+*     с двумерными массивами (в методе readField), копипастнул в DynamicTasks.kt, idea код сама перевела
+*    не бейте, если вырвиглазный код получился
+*    */
 
 
 //Трудоемкость T = O(n^2)
@@ -131,8 +133,13 @@ fun shortestPathOnField(inputName: String): Int {
     val length: Int
     val height: Int
     val temp = lH(inputName)
+    if (temp.isEmpty()) {
+        System.out.print("empty field")
+        return -1
+    }
     length = temp[1]
     height = temp[0]
+
 
     f = readField(inputName, length, height)
 
