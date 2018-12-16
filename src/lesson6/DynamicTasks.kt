@@ -6,6 +6,7 @@ import java.io.File
 import java.io.FileReader
 import java.io.IOException
 import java.util.*
+import kotlin.collections.HashMap
 
 /**
  * Наибольшая общая подпоследовательность.
@@ -119,6 +120,10 @@ internal fun recFunction(i: Int, j: Int, f: Array<IntArray>): Int {
 //      Изначально написал на java, т.к. в котлине запутался в синтаксисе, связанном
 //     с двумерными массивами (в методе readField), копипастнул в DynamicTasks.kt, idea код сама перевела
 //     не бейте, если вырвиглазный код получился
+
+
+//Трудоемкость T = O(n^2)
+//Ресурсоемкость R = O(n), n = number of elements
 
 @Throws(IOException::class)
 fun shortestPathOnField(inputName: String): Int {
